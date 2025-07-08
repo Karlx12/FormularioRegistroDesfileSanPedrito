@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,10 +16,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hrcode.labs.formularioregistrodesfilesanpedrito.R
 import hrcode.labs.formularioregistrodesfilesanpedrito.data.student.*
-import hrcode.labs.formularioregistrodesfilesanpedrito.domain.Person
 import hrcode.labs.formularioregistrodesfilesanpedrito.domain.TypePerson
+import hrcode.labs.formularioregistrodesfilesanpedrito.domain.Person
 
 @Composable
 fun ListScreen(
@@ -40,6 +40,18 @@ fun ListScreen(
     var showSortDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
+        // Precarga de 3 participantes válidos
+        if (viewModel.allPersons.value.isEmpty()) {
+            viewModel.insertPerson(
+                Person(name = "Ana", lastName = "García", email = "ana.garcia@email.com", type = TypePerson.STUDENT)
+            )
+            viewModel.insertPerson(
+                Person(name = "Luis", lastName = "Pérez", email = "luis.perez@email.com", type = TypePerson.PROFESSOR)
+            )
+            viewModel.insertPerson(
+                Person(name = "María", lastName = "Lopez", email = "maria.lopez@email.com", type = TypePerson.STUDENT)
+            )
+        }
         viewModel.loadAllPersons()
     }
 
@@ -67,7 +79,7 @@ fun ListScreen(
                     onClick = { showFilterDialog = true }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.FilterList,
+                        painter= painterResource(id = R.drawable.filter_list),
                         contentDescription = "Filtrar por tipo"
                     )
                 }
@@ -79,7 +91,7 @@ fun ListScreen(
                     onClick = { showSortDialog = true }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Sort,
+                        painter= painterResource(id = R.drawable.sort),
                         contentDescription = "Ordenar"
                     )
                 }
